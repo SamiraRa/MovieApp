@@ -11,4 +11,18 @@ to install this CLI ,run the command:
 ```bash
     $ npm install -g expo-cli
 ```
-
+## Dependency
+```bash
+    "@react-navigation/native": "^6.0.8",
+    "@react-navigation/native-stack": "^6.5.1",
+    "axios": "^0.26.1",
+    "bootstrap": "^5.1.3",
+    "expo": "~44.0.2",
+    "expo-splash-screen": "~0.14.1",
+    "expo-status-bar": "~1.2.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-vector-icons": "^9.1.0",
+    "react-native-web": "0.17.1"
+```

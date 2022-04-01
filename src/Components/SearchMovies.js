@@ -1,72 +1,44 @@
-import React, {useState} from 'react';
+import React, {useEffect,useState} from 'react';
 import { View, Text, Image, LogBox, ScrollView, TextInput } from 'react-native';
+import {Button, Textfield} from '@material-ui/core'
+import SearchIcon from '@material-ui/icons/Search'
+
 import {POSTER_IMAGE} from '../config';
-import {API_URL} from '../API';
+import {GET} from '../API'
 import Loader from './Loader';
 import Styles from '../Styles';
 import axios from 'axios';
+
 import { TouchableHighlight } from 'react-native-web';
 
 
 const SearchMovies = () => {
-    const [movies, setMovies] = useState([]);
+    const [searchText, setSearchText] = useState("");
     const[loading, setLoading] = useState(true);
-    const [state, setState] = useState({
-      s:'' ,
-      results: [],
-      selected: {}
-    });
+    const [content, setContent] = useState([]);
 
-            const search = () => {
-              axios(API_URL+state.s).then(({data})=>{
-                let results = data.Search;
-                setState(prevState => {
-                  return {...prevState,results:results}
-                })
-              })
-            }
-            const openPopup = (id) =>{
-              axios(API_URL+id).then(({data})=>{
-                let result = data;
-                console.log(result);
-                setState(prevState => {
-                  return{...prevState,selected: result};
-                });
-              });
-            }
+            const Search = async () => {
+              try{
+                const {data} = await axios.get('https://api.themoviedb.org/3/search/movie?2057ebea8436d7331724b6b9edcf1e78&languages=en-US&query=${searchText}&include_adult=false');
+              setContent(data.results);         
+              }catch(error){console.error(error);}};
+              
+              useEffect(()=>{
+               
+                Search();
+              },[])
+
+            useEffect(() => {
+              LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+            }, [])
+          
   return (
     <View >
- 
     <TextInput style={Styles.searchbox} 
-    onChangeText ={ text => setState(prevState => {
-      return {...prevState, s: text}
-    }) }
-
-    onSubmitEditing ={search}
-    value={state.s}
+    onChangeText ={ (e)=> setSearchText(e.target.value) }
+    onSubmitEditing ={Search}
     />
-    <ScrollView>
-    {
-      state.results.map(result =>(
-
-        <TouchableHighlight listMode="SCROLLVIEW"
-        key={result.item.id}
-          onPress={() => {
-            open.popup('movieDetails', {movieId: item.id});
-          }}
-          style={{marginHorizontal: 10}}>
-          <Image
-            source={{uri: `${POSTER_IMAGE}${item.poster_path}`}}
-            style={Styles.posterImage}
-          />
-          <Text style={Styles.movieTitle}>{item.original_title}</Text>
-          
-        </TouchableHighlight>
-      ))}
-        </ScrollView>
-     
-   
-
+    
   </View>
 
   );
